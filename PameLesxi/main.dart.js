@@ -66307,7 +66307,7 @@ Nt(a,b){var s=0,r=A.a0(t.z),q,p,o,n,m,l,k
 var $async$qj=A.a1(function(c,d){if(c===1)return A.Y(d,r)
 while(true)switch(s){case 0:l=t.N
 s=2
-return A.a4(A.amK(A.Kh("http://130.185.234.70:3338/meals"),A.aK(["Accept","*/*","Accept-Encoding","gzip, deflate, br","Connection","keep-alive","Content-Type","application/json; charset=utf-8"],l,l)),$async$qj)
+return A.a4(A.amK(A.Kh("https://130.185.234.70:3338/meals"),A.aK(["Accept","*/*","Accept-Encoding","gzip, deflate, br","Connection","keep-alive","Content-Type","application/json; charset=utf-8"],l,l)),$async$qj)
 case 2:k=d
 if(k.b===200){q=B.aG.yY(0,B.R.cU(0,k.w),null)
 p=A.b([],t.xj)
@@ -66323,7 +66323,7 @@ NA(a,b){var s=0,r=A.a0(t.z),q,p,o,n,m,l
 var $async$qm=A.a1(function(c,d){if(c===1)return A.Y(d,r)
 while(true)switch(s){case 0:m=t.N
 s=2
-return A.a4(A.amK(A.Kh("http://130.185.234.70:3338/program"),A.aK(["Accept","*/*","Accept-Encoding","gzip, deflate, br","Connection","keep-alive","Content-Type","application/json; charset=utf-8"],m,m)),$async$qm)
+return A.a4(A.amK(A.Kh("https://130.185.234.70:3338/program"),A.aK(["Accept","*/*","Accept-Encoding","gzip, deflate, br","Connection","keep-alive","Content-Type","application/json; charset=utf-8"],m,m)),$async$qm)
 case 2:l=d
 if(l.b===200){q=B.aG.yY(0,B.R.cU(0,l.w),null)
 p=A.b([],t.nS)
