@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Quiz JSON Editor</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .question {
+        background: white;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+      input[type="text"] {
+        width: 100%;
+        margin: 5px 0;
+        padding: 6px;
+      }
+      .options {
+        margin-left: 15px;
+      }
+      button {
+        margin-top: 10px;
+        margin-right: 5px;
+        padding: 6px 10px;
+        cursor: pointer;
+      }
+      pre {
+        background: #111;
+        color: #0f0;
+        padding: 15px;
+        overflow: auto;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Quiz JSON Editor</h2>
+
+    <input type="file" id="fileInput" accept=".json" />
+    <button onclick="importJSON()">📥 Import JSON</button>
+    <br /><br />
+
+    <div id="questions"></div>
+
+    <button onclick="addQuestion()">➕ Add Question</button>
+    <button onclick="exportJSON()">📄 Export JSON</button>
+
+    <h3>Output JSON</h3>
+    <pre id="output"></pre>
+
+    <script>
+      let quiz = [];
+
+      function addQuestion() {
+        quiz.push({
+          question: "",
+          options: ["", "", "", ""],
+          correctOptionIndex: 0,
+        });
+        render();
+      }
+
+      function removeQuestion(index) {
+        quiz.splice(index, 1);
+        render();
+      }
+
+      function render() {
+        const container = document.getElementById("questions");
+        container.innerHTML = "";
+
+        quiz.forEach((q, qi) => {
+          const div = document.createElement("div");
+          div.className = "question";
+
+          div.innerHTML = `
+      <label><strong>Question</strong></label>
+      <input type="text" value="${escapeHtml(q.question)}"
+        oninput="quiz[${qi}].question=this.value">
+
+      <div class="options">
+        ${q.options
+          .map(
+            (opt, oi) => `
+          <div>
+            <input type="radio" name="correct-${qi}"
+              ${q.correctOptionIndex === oi ? "checked" : ""}
+              onchange="quiz[${qi}].correctOptionIndex=${oi}">
+            <input type="text" value="${escapeHtml(opt)}"
+              oninput="quiz[${qi}].options[${oi}]=this.value">
+          </div>
+        `
+          )
+          .join("")}
+      </div>
+
+      <button onclick="removeQuestion(${qi})">🗑 Remove</button>
+    `;
+          container.appendChild(div);
+        });
+      }
+
+      function exportJSON() {
+        document.getElementById("output").textContent = JSON.stringify(
+          quiz,
+          null,
+          2
+        );
+      }
+
+      function importJSON() {
+        const fileInput = document.getElementById("fileInput");
+        const file = fileInput.files[0];
+        if (!file) {
+          alert("Please select a JSON file first.");
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const parsed = JSON.parse(e.target.result);
+
+            if (!Array.isArray(parsed)) {
+              throw new Error("JSON must be an array");
+            }
+
+            // Basic validation
+            parsed.forEach((q) => {
+              if (
+                typeof q.question !== "string" ||
+                !Array.isArray(q.options) ||
+                typeof q.correctOptionIndex !== "number"
+              ) {
+                throw new Error("Invalid quiz structure");
+              }
+            });
+
+            quiz = parsed;
+            render();
+            document.getElementById("output").textContent = "";
+          } catch (err) {
+            alert("Invalid JSON file: " + err.message);
+          }
+        };
+
+        reader.readAsText(file);
+      }
+
+      // Prevent HTML injection in inputs
+      function escapeHtml(str) {
+        return str
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      // Start empty
+      addQuestion();
+    </script>
+  </body>
+</html>
